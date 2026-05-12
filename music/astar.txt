@@ -1,0 +1,150 @@
+goal_state = [[1, 2, 3],
+              [4, 5, 6],
+              [7, 8, 0]]
+
+# Possible moves: up, down, left, right
+directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+
+# Heuristic function: count misplaced tiles
+def h_misplaced_tiles(state):
+    count = 0
+
+    for i in range(3):
+        for j in range(3):
+
+            # Ignore blank tile (0)
+            if state[i][j] != 0 and state[i][j] != goal_state[i][j]:
+                count += 1
+
+    return count
+
+
+# Find position of blank tile (0)
+def find_blank(state):
+
+    for i in range(3):
+        for j in range(3):
+
+            if state[i][j] == 0:
+                return i, j
+
+
+# Check valid position
+def is_valid(x, y):
+    return 0 <= x < 3 and 0 <= y < 3
+
+
+# Convert list to tuple (for visited set)
+def state_to_tuple(state):
+    return tuple(tuple(row) for row in state)
+
+
+def a_star(start_state):
+
+    # OPEN list stores states to explore
+    open_list = []
+
+    # CLOSED set stores visited states
+    visited = set()
+
+    g = 0
+    h = h_misplaced_tiles(start_state)
+    f = g + h
+
+    # Each item = [f, g, state, path]
+    open_list.append([f, g, start_state, []])
+
+    while open_list:
+
+        # Find state with minimum f value
+        current_index = 0
+
+        for i in range(len(open_list)):
+            if open_list[i][0] < open_list[current_index][0]:
+                current_index = i
+
+        # Remove best state
+        f, g, current, path = open_list.pop(current_index)
+
+        current_tuple = state_to_tuple(current)
+
+        # Skip if already visited
+        if current_tuple in visited:
+            continue
+
+        visited.add(current_tuple)
+
+        # Goal check
+        if current == goal_state:
+            return path + [current]
+
+        # Find blank tile
+        x, y = find_blank(current)
+
+        # Generate new states
+        for dx, dy in directions:
+
+            nx, ny = x + dx, y + dy
+
+            if is_valid(nx, ny):
+
+                # Copy current state
+                new_state = [row[:] for row in current]
+
+                # Swap blank tile
+                new_state[x][y], new_state[nx][ny] = \
+                    new_state[nx][ny], new_state[x][y]
+
+                if state_to_tuple(new_state) not in visited:
+
+                    new_g = g + 1
+                    new_h = h_misplaced_tiles(new_state)
+                    new_f = new_g + new_h
+
+                    open_list.append(
+                        [new_f, new_g, new_state, path + [current]]
+                    )
+
+    return None
+
+
+# Print solution path
+def print_path(path):
+
+    for step, state in enumerate(path):
+
+        print("Step", step)
+
+        for row in state:
+            print(row)
+
+        print()
+
+
+# Input from user
+def get_input_state():
+
+    print("Enter initial state:")
+
+    state = []
+
+    for i in range(3):
+
+        row = input("Enter 3 numbers separated by space: ").split()
+
+        state.append([int(x) for x in row])
+
+    return state
+
+
+# Main program
+initial_state = get_input_state()
+
+solution = a_star(initial_state)
+
+if solution:
+    print("\nSolution Found:\n")
+    print_path(solution)
+else:
+    print("No solution found")

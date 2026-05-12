@@ -1,0 +1,103 @@
+# BEGINNING OF CODE
+graph = []
+def prims_mst(graph):
+    n = len(graph)
+    selected = [False] * n
+    no_of_edges = 0
+    selected[0] = True
+
+    print("Edge : Weight")
+    while no_of_edges < n - 1:
+        minimum = 999
+        x = 0
+        y = 0
+
+        for i in range(n):
+            if selected[i]==True:
+                for j in range(n):
+                    if not selected[j] and graph[i][j] != 999 and i != j:
+                        if minimum > graph[i][j]:
+                            minimum = graph[i][j]
+                            x = i
+                            y = j
+        print(f"{x} - {y} : {graph[x][y]}")
+        selected[y] = True
+        no_of_edges += 1
+
+def input_graph():
+    V = int(input("Enter number of vertices: "))
+    print("Enter adjacency matrix of Graph row by row:")
+    for i in range(V):
+        row = list(map(int, input(f"Row {i}: ").split()))
+        graph.append(row)
+def main():
+	while True:
+        	print("\nMenu:")
+        	print("1. Input graph")
+        	print("2. Run Prim's MST algorithm")
+        	print("3. Exit")
+        
+        	choice = int(input("Enter your choice: "))
+        
+        	if choice == 1:
+            		input_graph()
+        	elif choice == 2:
+            		prims_mst(graph)
+        	elif choice == 3:
+            		print("Exiting...")
+            		break
+        	else:
+            		print("Invalid choice! Please try again.")
+
+main()
+###############
+
+
+
+
+# BEGINNING OF CODE
+numbers = [] # Empty list to store numbers
+
+# Function to take input for numbers
+def input_numbers():
+        total = int(input("\nHow many numbers you wish to enter?\nTotal numbers:\t"))
+        for i in range(total):
+                val = float(input(f"Enter number {i+1}:\t"))
+                numbers.append(val)
+        print("Numbers you've entered are:\t", numbers)
+
+# Function for selection sort
+def selection_sort():
+    for i in range(len(numbers)):
+        min_index = i
+        for j in range(i+1, len(numbers)):
+            if numbers[j] < numbers[min_index]:
+                min_index = j
+        numbers[i], numbers[min_index] = numbers[min_index], numbers[i] # Swapping
+    print("\nNumbers sorted in ascending order using selection sort:\t", numbers)
+
+# Main function for menu
+def main():
+  while True:
+    print("\n\n", "-"*10, "MAIN MENU", "-"*10)
+    print("1. Enter numbers")
+    print("2. Apply selection sort")
+    print("3. List numbers")
+    print("4. Exit")
+    choice = int(input("Choose an option (1-4):\t"))
+    print("-"*32)
+
+    if (choice == 1):
+      input_numbers()
+    elif (choice == 2):
+      selection_sort()
+    elif (choice == 3):
+      print("\nNumbers you've entered are:\t", numbers)
+    elif (choice == 4):
+      print("\n## END OF CODE\n")
+      break
+    else:
+      print("\nPlease choose a valid option (1-4)")
+
+main()
+# END OF CODE

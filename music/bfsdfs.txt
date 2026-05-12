@@ -1,0 +1,81 @@
+# Graph using Dictionary
+graph = {}
+
+# Function to add edges
+def add_edge(u, v):
+
+    # Create empty list if vertex not present
+    if u not in graph:
+        graph[u] = []
+
+    if v not in graph:
+        graph[v] = []
+
+    # Add connection both ways (Undirected Graph)
+    graph[u].append(v)
+    graph[v].append(u)
+
+
+# DFS Function (Depth First Search)
+def dfs(node, visited):
+
+    # Mark node as visited
+    visited.append(node)
+
+    # Print current node
+    print(node, end=" ")
+
+    # Visit all neighbours
+    for neighbour in graph[node]:
+
+        if neighbour not in visited:
+            dfs(neighbour, visited)
+
+
+# BFS Function (Breadth First Search)
+def bfs(start):
+
+    visited = []      # Stores visited nodes
+    queue = []        # Normal list used as queue
+
+    # Start node added
+    visited.append(start)
+    queue.append(start)
+
+    while len(queue) > 0:
+
+        # Remove first element from queue
+        node = queue.pop(0)
+
+        print(node, end=" ")
+
+        # Visit neighbours
+        for neighbour in graph[node]:
+
+            if neighbour not in visited:
+
+                visited.append(neighbour)
+                queue.append(neighbour)
+
+
+# -------- MAIN PROGRAM --------
+
+edges = int(input("Enter number of edges: "))
+
+for i in range(edges):
+
+    u = input("Enter first vertex: ")
+    v = input("Enter second vertex: ")
+
+    add_edge(u, v)
+
+print("\nGraph is:")
+print(graph)
+
+start = input("\nEnter starting vertex: ")
+
+print("\nDFS Traversal:")
+dfs(start, [])
+
+print("\n\nBFS Traversal:")
+bfs(start)
